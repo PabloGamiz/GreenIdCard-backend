@@ -67,11 +67,8 @@ class ResidentialBuildingClassificationSet(ViewSet):
         responses= {404:'No s\'ha pogut crear la classificacio', 201: ClassificationResidentialBuildingSerializer})
     def create(self, request):
         c = ClassificationResidentialBuilding(calification = request.data['classificacio'], min_C1 = request.data['min_C1'], max_C1 = request.data['max_C1'],min_C2 = request.data['min_C2'],max_C2 = request.data['max_C2'])
-        if c.DoesNotExist:
-            return Response ('No s\'ha pogut crear la classificacio', 404)
-        else:
-            serializer = ClassificationResidentialBuildingSerializer(c)
-            return Response(serializer.data, 201)
+        serializer = ClassificationResidentialBuildingSerializer(c)
+        return Response(serializer.data, 201)
 
 #Actualizar los valores de una classificacion para un edificio nuevo
     @swagger_auto_schema(
@@ -103,7 +100,7 @@ class ResidentialBuildingClassificationSet(ViewSet):
             required=["classificacio", "min_C1", "max_C1"],
         ),
         responses= {404: 'Classificacio no actualitzada correctament', 200: ClassificationResidentialBuildingSerializer})
-    def update(self, request, classification: string = None):
+    def update(self, request, pk = None):
         c = ClassificationResidentialBuilding.objects.get(calification = request.data['classificacio'])
         if c.exisits:
             c.min_C1 = request.data['min_C1']
@@ -123,7 +120,7 @@ class ResidentialBuildingClassificationSet(ViewSet):
         manual_parameters=[
             openapi.Parameter(
                 'C1',
-                in_=openapi.IN_PATH,
+                in_=openapi.IN_QUERY,
                 type=openapi.TYPE_NUMBER,
                 format=openapi.FORMAT_FLOAT,
                 required=True,
@@ -131,15 +128,14 @@ class ResidentialBuildingClassificationSet(ViewSet):
             ),
             openapi.Parameter(
                 'C2',
-                in_=openapi.IN_PATH,
+                in_=openapi.IN_QUERY,
                 type=openapi.TYPE_NUMBER,
                 format=openapi.FORMAT_FLOAT,
-                required=True,
                 description='Proporciona el valor de C2 calculat',
             ),
         ],
         responses= {200: openapi.Schema(type = openapi.TYPE_STRING, description='Categoria pertanyent als valors proporcionats'), 204: 'no s\'ha trobat cap classiificacio per aquests valors'})
-    def retrieve(self, request, classification_id: string = None):
+    def retrieve(self, request, pk = None):
         classification = ClassificationResidentialBuilding.objects.filter(min_C1__lt = request.data['C1'], max_C1__gt=request.data['C1']).count()
         if classification > 0:
             if request.data['C2'] == NULL:
@@ -179,7 +175,7 @@ class NonResidentialBuildingSet(ViewSet):
         ),
         responses= {404:'No s\'ha pogut crear la classificacio', 201: ClassificationNotResidentialBuildingSerializer})    
         
-    def create(self, request):
+    def create(self, request, pk = None):
         c = ClassificationNotResidentialBuilding(classification = request.data['classificacio'], min_C = request.data['min_C'], max_C = request.data['max_C'])
         if c.DoesNotExist:
             return Response ('No s\'ha pogut crear la classificacio', 404)
