@@ -75,45 +75,45 @@ class ExistingBuildingEmissions(models.Model):
 class NewBuldingDemandDispersions(models.Model):
     building_type = models.BooleanField()
     climatic_zone = models.CharField(max_length=4)
-    dipersion = models.FloatField(null=True)
+    dispersion = models.FloatField(null=True)
 
     unique_together = [["building_type", "climatic_zone"]]
 
 class NewBuldingEnergyAndEmissionsDispersions(models.Model):
     building_type = models.BooleanField()
     climatic_zone = models.CharField(max_length=4)
-    dipersion = models.FloatField(null=True)
+    dispersion = models.FloatField(null=True)
 
     unique_together = [["building_type", "climatic_zone"]]
 
 class ExistingBuldingDemandDispersions(models.Model):
     building_type = models.BooleanField()
     climatic_zone = models.CharField(max_length=4)
-    dipersion = models.FloatField(null=True)
+    dispersion = models.FloatField(null=True)
 
     unique_together = [["building_type", "climatic_zone"]]
 
 class ExistingBuldingEnergyAndEmissionsDispersions(models.Model):
     building_type = models.BooleanField()
     climatic_zone = models.CharField(max_length=4)
-    dipersion = models.FloatField(null=True)
+    dispersion = models.FloatField(null=True)
 
     unique_together = [["building_type", "climatic_zone"]]
 
 class User(models.Model):
-    username = models.CharField(primary_key=True)
-    password = models.CharField()
-    email = models.CharField()
+    username = models.CharField(primary_key=True, max_length=100)
+    password = models.CharField(max_length=100)
+    email = models.CharField(max_length=100)
 
 class File(models.Model):
-    name = models.CharField()
-    description = models.CharField()
+    name = models.CharField(max_length=100)
+    description = models.CharField(max_length=100)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 class Calcul(models.Model):
-    type = models.CharField()
-    date = models.DateTimeField()
+    type = models.CharField(max_length=100)
+    date = models.CharField(max_length=100)
     value = models.FloatField()
-    calification = models.CharField()
+    calification = models.CharField(max_length=100)
     consumption = models.FloatField()
     file = models.ForeignKey(File, on_delete=models.CASCADE)

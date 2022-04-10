@@ -1,6 +1,7 @@
 from asyncio.windows_events import NULL
 from doctest import ELLIPSIS_MARKER
 from sqlite3 import enable_shared_cache
+import string
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import logout
@@ -11,6 +12,7 @@ from django import forms
 #from .forms import SubmitForm
 from django.contrib import messages
 from django.urls import reverse, reverse_lazy
+from pyparsing import Char
 from .models import (ClassificationResidentialBuilding, ClassificationNotResidentialBuilding, NewBuildingDemand, NewBuildingEnergyConsume, NewBuildingEmissions, ExistingBuildingDemand, ExistingBuildingEnergyConsume, ExistingBuildingEmissions, NewBuldingDemandDispersions, NewBuldingEnergyAndEmissionsDispersions, ExistingBuldingDemandDispersions, ExistingBuldingEnergyAndEmissionsDispersions,User,File,Calcul)
 from .serializers import (ClassificationResidentialBuildingSerializer, ClassificationNotResidentialBuildingSerializer, NewBuildingDemandSerializer, NewBuildingEnergyConsumeSerializer, NewBuildingEmissionsSerializer, ExistingBuildingDemandSerializer, ExistingBuildingEnergyConsumeSerializer, ExistingBuildingEmissionsSerializer, NewBuldingDemandDispersionsSerializer, NewBuldingEnergyAndEmissionsDispersionsSerializer, ExistingBuldingDemandDispersionsSerializer, ExistingBuldingEnergyAndEmissionsDispersionsSerializer, UserSerializer,FileSerializer,CalculSerializer)
 from django.db.models import Case, When
@@ -101,7 +103,7 @@ class ResidentialBuildingClassificationSet(ViewSet):
             required=["classificacio", "min_C1", "max_C1"],
         ),
         responses= {404: 'Classificacio no actualitzada correctament', 200: ClassificationResidentialBuildingSerializer})
-    def update(self, request, pk=None):
+    def update(self, request, classification: string = None):
         c = ClassificationResidentialBuilding.objects.get(calification = request.data['classificacio'])
         if c.exisits:
             c.min_C1 = request.data['min_C1']
@@ -137,7 +139,7 @@ class ResidentialBuildingClassificationSet(ViewSet):
             ),
         ],
         responses= {200: openapi.Schema(type = openapi.TYPE_STRING, description='Categoria pertanyent als valors proporcionats'), 204: 'no s\'ha trobat cap classiificacio per aquests valors'})
-    def retrieve(self, request):
+    def retrieve(self, request, classification_id: string = None):
         classification = ClassificationResidentialBuilding.objects.filter(min_C1__lt = request.data['C1'], max_C1__gt=request.data['C1']).count()
         if classification > 0:
             if request.data['C2'] == NULL:
@@ -1197,7 +1199,7 @@ class ExistingBuildingDemandDispersionsSet (ViewSet):
             required=["type", "climatic_zone", "value"],
         ),
         responses= {404: 'No s\'ha pogut actualitzar la dispersio', 200: ExistingBuldingDemandDispersionsSerializer})
-    def update(self, request, pk=None):
+    def update(self, request, classificarion: string = None):
         d = ExistingBuldingDemandDispersions.objects.filter(building_type=request.data['type'], climatic_zone = request.data['climatic_zone'])
         if d.exists:
             d.dispersion = request.data['value']

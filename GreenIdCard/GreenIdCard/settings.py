@@ -41,6 +41,16 @@ INSTALLED_APPS = [
     'drf_yasg',
 ]
 
+SWAGGER_SETTINGS = {
+      'SECURITY_DEFINITIONS': {
+         'DRF Token': {
+               'type': 'apiKey',
+               'name': 'Authorization',
+               'in': 'header'
+         }
+      }
+}
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -100,6 +110,12 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+    ]
+}
 
 
 # Internationalization
