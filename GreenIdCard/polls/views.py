@@ -187,7 +187,6 @@ class NonResidentialBuildingSet(ViewSet):
             serializer = ClassificationNotResidentialBuildingSerializer(c)
             return Response(serializer.data)
 
-
     #Actualizar los valores de una classificacion para un edificio existente
     @swagger_auto_schema(
         operation_description='Actualitza els valors de les classificacions per a edificis existents',
