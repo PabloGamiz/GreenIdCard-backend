@@ -1,3 +1,0 @@
-web: gunicorn GreenIdCard.wsgi --log-file -
-web: python manage.py runserver 0.0.0.0:8000
-heroku ps:scale web=1
